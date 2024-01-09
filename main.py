@@ -7,9 +7,12 @@ import yamlreader
 yml_reader = yamlreader.YamlReader()
 
 TOKEN = str(yml_reader.read_property()["token"])
-CHANNEL = "ikoryu"
+
+# The Channel you want to check
+CHANNEL = str(yml_reader.read_property()["channel"])
 
 print("Insert win word: ")
+# This will contain the win string
 WIN_MESSAGE = str(input())
 
 
@@ -30,14 +33,19 @@ class Bot(commands.Bot):
 
     async def event_message(self, message):
 
+        # avoid reading the bot messages
         if message.echo:
             return
 
+        # Print every message in chat
         print(f"User:{message.author.name} - Message:{message.content}")
 
+        # message found
         if message.content.lower().strip() == WIN_MESSAGE.lower():
             print(f"The winner is {message.author.name}")
             await message.channel.send(f"YOU WIN {message.author.name}")
+
+            # close on finish
             await self.close()
             sys.exit()
 
